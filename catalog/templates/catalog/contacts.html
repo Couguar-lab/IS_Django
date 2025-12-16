@@ -50,3 +50,11 @@
     </div>
 </div>
 {% endblock %}
+
+{% if contacts %}
+<h3>Наши реквизиты</h3>
+<p>Email: {{ contacts.email }}</p>
+<p>Страна: {{ contacts.country }}</p>
+<p>ИНН: {{ contacts.inn }}</p>
+<p>Адрес: {{ contacts.address }}</p>
+{% endif %}

@@ -29,4 +29,12 @@
         </div>
     </div>
 </div>
+<h2>Последние добавленные товары</h2>
+<ul>
+{% for product in latest_products %}
+    <li>{{ product.name }} — {{ product.price }} руб.</li>
+{% empty %}
+    <li>Товаров пока нет</li>
+{% endfor %}
+</ul>
 {% endblock %}

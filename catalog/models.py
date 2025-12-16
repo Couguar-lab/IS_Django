@@ -29,3 +29,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+class Contacts(models.Model):
+    email = models.EmailField(verbose_name='Email')
+    country = models.CharField(max_length=100, verbose_name='Страна')
+    inn = models.CharField(max_length=12, verbose_name='ИНН')
+    address = models.TextField(verbose_name='Адрес')
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
+
+    def __str__(self):
+        return self.email
