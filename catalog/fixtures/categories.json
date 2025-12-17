@@ -1,0 +1,18 @@
+[
+{
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Рассылки",
+    "description": "Сервисы рассылок"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Боты",
+    "description": "Телеграм-боты"
+  }
+}
+]
