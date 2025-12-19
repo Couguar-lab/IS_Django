@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.contrib import messages
 from catalog.models import Product, Contacts, Category
 from django.core.paginator import Paginator
 
@@ -12,14 +12,9 @@ def home(request):
     return render(request, 'catalog/home.html', {'products': products})
 
 def contacts(request):
-    success = False
     if request.method == 'POST':
-        success = True
-    contacts = Contacts.objects.first()  # предполагаем, что один объект
-    return render(request, 'catalog/contacts.html', {
-        'success': success,
-        'contacts': contacts
-    })
+        messages.success(request, "Спасибо! Ваше сообщение отправлено.")
+    return render(request, 'catalog/contacts.html')
 
 def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
