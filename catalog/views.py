@@ -1,41 +1,39 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib import messages
-from catalog.models import Product, Contacts, Category
-from django.core.paginator import Paginator
+from .models import Product, Contacts
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 
+class HomeView(ListView):
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
+    paginate_by = 6
+    ordering = ['-created_at']
 
-def home(request):
-    products_list = Product.objects.all().order_by('-created_at')
-    paginator = Paginator(products_list, 6)  # 6 товаров на страницу
-    page_number = request.GET.get('page')
-    products = paginator.get_page(page_number)
-    return render(request, 'catalog/home.html', {'products': products})
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
-def contacts(request):
-    if request.method == 'POST':
+class ContactsView(TemplateView):
+    template_name = 'catalog/contacts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['contacts'] = Contacts.objects.first()
+        return context
+
+    def post(self, request, *args, **kwargs):
         messages.success(request, "Спасибо! Ваше сообщение отправлено.")
-    return render(request, 'catalog/contacts.html')
+        return self.get(request, *args, **kwargs)
 
-def product_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'catalog/product_detail.html', {'product': product})
+class AddProductView(CreateView):
+    model = Product
+    template_name = 'catalog/add_product.html'
+    fields = ['name', 'description', 'image', 'category', 'price']
+    success_url = reverse_lazy('catalog:home')
 
-
-def add_product(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        description = request.POST['description']
-        price = request.POST['price']
-        category_id = request.POST['category']
-        category = Category.objects.get(pk=category_id)
-
-        Product.objects.create(
-            name=name,
-            description=description,
-            price=price,
-            category=category
-        )
-        return redirect('catalog:home')
-
-    categories = Category.objects.all()
-    return render(request, 'catalog/add_product.html', {'categories': categories})
+    def form_valid(self, form):
+        messages.success(self.request, "Товар успешно добавлен!")
+        return super().form_valid(form)

@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     'catalog',
+    'blog.apps.BlogConfig',
+    'mailer',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,5 @@ USE_TZ = True
 STATIC_URL = "static/"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+EMAIL_BACKEND = "mailer.backend.DbBackend"
