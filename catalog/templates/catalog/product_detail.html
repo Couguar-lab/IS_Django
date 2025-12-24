@@ -1,27 +1,54 @@
 {% extends "catalog/base.html" %}
-{% load static %}
 
 {% block title %}{{ product.name }} — Skystore{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <a href="{% url 'catalog:home' %}" class="btn btn-secondary mb-3">← Назад к каталогу</a>
-    
+<div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
+        <!-- Кнопка возврата -->
+        <div class="col-12 mb-4">
+            <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">
+                ← Назад к каталогу
+            </a>
+        </div>
+
+        <!-- Изображение продукта -->
+        <div class="col-md-6 mb-4 mb-md-0">
             {% if product.image %}
-                <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
             {% else %}
-                <img src="{% static 'no_image.png' %}" class="img-fluid rounded" alt="Нет изображения">
+                <img src="https://via.placeholder.com/600x400?text=Нет+изображения" class="img-fluid rounded shadow" alt="Нет изображения">
             {% endif %}
         </div>
+
+        <!-- Информация о продукте -->
         <div class="col-md-6">
-            <h1>{{ product.name }}</h1>
-            <p><strong>Цена:</strong> {{ product.price }} руб.</p>
-            <p><strong>Категория:</strong> {{ product.category.name }}</p>
-            <p><strong>Описание:</strong></p>
-            <p>{{ product.description|linebreaks }}</p>
-            <p><small>Создано: {{ product.created_at|date:"d.m.Y" }}</small></p>
+            <h1 class="mb-3">{{ product.name }}</h1>
+
+            <div class="mb-4">
+                <h4 class="text-success">{{ product.price }} ₽</h4>
+                <p class="text-muted mb-1">
+                    Категория: <strong>{{ product.category.name }}</strong>
+                </p>
+                <p class="text-muted small">
+                    Добавлено: {{ product.created_at|date:"d.m.Y" }} •
+                    Обновлено: {{ product.updated_at|date:"d.m.Y" }}
+                </p>
+            </div>
+
+            <!-- Описание -->
+            <h5>Описание:</h5>
+            <p class="lead">{{ product.description|linebreaks }}</p>
+
+            <!-- Кнопки действий -->
+            <div class="mt-4">
+                <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-warning me-2">
+                    Редактировать
+                </a>
+                <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
+                    Удалить
+                </a>
+            </div>
         </div>
     </div>
 </div>
