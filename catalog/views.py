@@ -1,7 +1,14 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
-                                  TemplateView, UpdateView)
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
 from .forms import ProductForm
 from .models import Contacts, Product
@@ -42,7 +49,7 @@ class ContactsView(TemplateView):
         return self.get(request, *args, **kwargs)
 
 
-class AddProductView(CreateView):
+class AddProductView(LoginRequiredMixin, CreateView):
     """Позволяет добавить новый продукт через форму."""
 
     model = Product
@@ -56,7 +63,7 @@ class AddProductView(CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Редактирует существующий продукт через форму."""
 
     model = Product
@@ -70,7 +77,7 @@ class ProductUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """Удаляет продукт с подтверждением."""
 
     model = Product
