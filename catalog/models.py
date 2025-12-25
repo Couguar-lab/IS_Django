@@ -1,8 +1,11 @@
+# mypy: disable-error-code="var-annotated"
 # Create your models here.
 from django.db import models
 
 
 class Category(models.Model):
+    """Модель категории товаров."""
+
     name = models.CharField(max_length=100, verbose_name="Наименование")
     description = models.TextField(blank=True, verbose_name="Описание")
 
@@ -11,10 +14,13 @@ class Category(models.Model):
         verbose_name_plural = "Категории"
 
     def __str__(self):
+        """Возвращает название категории как строковое представление."""
         return self.name
 
 
 class Product(models.Model):
+    """Модель продукта интернет-магазина."""
+
     name = models.CharField(max_length=200, verbose_name="Наименование")
     description = models.TextField(blank=True, verbose_name="Описание")
     image = models.ImageField(
@@ -32,10 +38,13 @@ class Product(models.Model):
         verbose_name_plural = "Продукты"
 
     def __str__(self):
+        """Возвращает название продукта как строковое представление."""
         return self.name
 
 
 class Contacts(models.Model):
+    """Модель контактных данных компании (для страницы контактов)."""
+
     email = models.EmailField(verbose_name="Email")
     country = models.CharField(max_length=100, verbose_name="Страна")
     inn = models.CharField(max_length=12, verbose_name="ИНН")
@@ -46,4 +55,5 @@ class Contacts(models.Model):
         verbose_name_plural = "Контакты"
 
     def __str__(self):
+        """Возвращает email как строковое представление."""
         return self.email
