@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, TemplateView
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  TemplateView, UpdateView)
 
+from .forms import ProductForm
 from .models import Contacts, Product
 
 
@@ -44,11 +46,38 @@ class AddProductView(CreateView):
     """Позволяет добавить новый продукт через форму."""
 
     model = Product
+    form_class = ProductForm
     template_name = "catalog/add_product.html"
-    fields = ["name", "description", "image", "category", "price"]
     success_url = reverse_lazy("catalog:home")
 
     def form_valid(self, form):
         """Показывает сообщение об успешном добавлении продукта."""
         messages.success(self.request, "Товар успешно добавлен!")
+        return super().form_valid(form)
+
+
+class ProductUpdateView(UpdateView):
+    """Редактирует существующий продукт через форму."""
+
+    model = Product
+    form_class = ProductForm
+    template_name = "catalog/product_update.html"
+    success_url = reverse_lazy("catalog:home")
+
+    def form_valid(self, form):
+        """Показывает сообщение об успешном обновлении продукта."""
+        messages.success(self.request, "Товар успешно обновлён!")
+        return super().form_valid(form)
+
+
+class ProductDeleteView(DeleteView):
+    """Удаляет продукт с подтверждением."""
+
+    model = Product
+    template_name = "catalog/product_delete.html"
+    success_url = reverse_lazy("catalog:home")
+
+    def form_valid(self, form):
+        """Показывает сообщение об успешном удалении продукта."""
+        messages.success(self.request, "Товар успешно удалён.")
         return super().form_valid(form)

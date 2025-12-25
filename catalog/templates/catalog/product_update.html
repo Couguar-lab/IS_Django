@@ -1,22 +1,22 @@
 {% extends "catalog/base.html" %}
 
-{% block title %}Добавить товар — Skystore{% endblock %}
+{% block title %}Редактировать товар — {{ object.name }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0">Добавить новый товар</h3>
+                <div class="card-header bg-warning text-dark">
+                    <h3 class="mb-0">Редактировать товар: {{ object.name }}</h3>
                 </div>
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form.as_p }}
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="submit" class="btn btn-success me-md-2">Добавить товар</button>
-                            <a href="{% url 'catalog:home' %}" class="btn btn-secondary">Отмена</a>
+                            <button type="submit" class="btn btn-warning me-md-2">Сохранить изменения</button>
+                            <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-secondary">Отмена</a>
                         </div>
                     </form>
                 </div>
