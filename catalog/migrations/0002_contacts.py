@@ -6,22 +6,30 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('catalog', '0001_initial'),
+        ("catalog", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Contacts',
+            name="Contacts",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email', models.EmailField(max_length=254, verbose_name='Email')),
-                ('country', models.CharField(max_length=100, verbose_name='Страна')),
-                ('inn', models.CharField(max_length=12, verbose_name='ИНН')),
-                ('address', models.TextField(verbose_name='Адрес')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("email", models.EmailField(max_length=254, verbose_name="Email")),
+                ("country", models.CharField(max_length=100, verbose_name="Страна")),
+                ("inn", models.CharField(max_length=12, verbose_name="ИНН")),
+                ("address", models.TextField(verbose_name="Адрес")),
             ],
             options={
-                'verbose_name': 'Контакт',
-                'verbose_name_plural': 'Контакты',
+                "verbose_name": "Контакт",
+                "verbose_name_plural": "Контакты",
             },
         ),
     ]
