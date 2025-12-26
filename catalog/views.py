@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import (
     CreateView,
@@ -59,11 +59,13 @@ class AddProductView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """Показывает сообщение об успешном добавлении продукта."""
-        messages.success(self.request, "Товар успешно добавлен!")
+        form.instance.owner = self.request.user
+        form.instance.is_published = False  # по умолчанию не опубликован
+        messages.success(self.request, "Товар успешно добавлен и отправлен на модерацию!")
         return super().form_valid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Редактирует существующий продукт через форму."""
 
     model = Product
@@ -71,18 +73,28 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "catalog/product_update.html"
     success_url = reverse_lazy("catalog:home")
 
+    def test_func(self):
+        product = self.get_object()
+        return self.request.user == product.owner or self.request.user.has_perm("catalog.can_unpublish_product")
+
     def form_valid(self, form):
         """Показывает сообщение об успешном обновлении продукта."""
         messages.success(self.request, "Товар успешно обновлён!")
         return super().form_valid(form)
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Удаляет продукт с подтверждением."""
 
     model = Product
     template_name = "catalog/product_delete.html"
     success_url = reverse_lazy("catalog:home")
+
+    def test_func(self):
+        product = self.get_object()
+        return (self.request.user == product.owner or
+                self.request.user.has_perm("catalog.delete_product") or
+                self.request.user.has_perm("catalog.can_unpublish_product"))
 
     def form_valid(self, form):
         """Показывает сообщение об успешном удалении продукта."""
