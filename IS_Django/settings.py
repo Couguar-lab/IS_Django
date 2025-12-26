@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "catalog.apps.CatalogConfig",
     "blog.apps.BlogConfig",
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -95,12 +96,12 @@ WSGI_APPLICATION = "IS_Django.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(BASE_DIR / "db.sqlite3"),
-    }
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": str(BASE_DIR / "db.sqlite3"),
+#     }
+# }
 
 
 # Password validation
@@ -141,4 +142,15 @@ STATIC_URL = "static/"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR / "media")
 
-EMAIL_BACKEND = "mailer.backend.DbBackend"
+EMAIL_BACKEND = (
+    "django.core.mail.backends.console.EmailBackend"  # для теста — в консоль
+)
+# Для реальной отправки:
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = "smtp.gmail.com"
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = "your@gmail.com"
+# EMAIL_HOST_PASSWORD = "app_password"
+
+AUTH_USER_MODEL = "users.CustomUser"
