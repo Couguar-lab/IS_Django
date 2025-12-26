@@ -24,7 +24,7 @@ class HomeView(ListView):
     ordering = ["-created_at"]
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     """Отображает детальную информацию о конкретном продукте."""
 
     model = Product
