@@ -3,8 +3,8 @@
   "model": "catalog.product",
   "pk": 1,
   "fields": {
-    "name": "Pro Рассылки",
-    "description": "Неограниченные рассылки",
+    "name": "Pro Р Р°СЃСЃС‹Р»РєРё",
+    "description": "РќРµРѕРіСЂР°РЅРёС‡РµРЅРЅС‹Рµ СЂР°СЃСЃС‹Р»РєРё",
     "image": "",
     "category": 1,
     "price": "9900.00",
@@ -16,8 +16,8 @@
   "model": "catalog.product",
   "pk": 2,
   "fields": {
-    "name": "Telegram Бот",
-    "description": "Готовый бот",
+    "name": "Telegram Р‘РѕС‚",
+    "description": "Р“РѕС‚РѕРІС‹Р№ Р±РѕС‚",
     "image": "",
     "category": 2,
     "price": "5000.00",

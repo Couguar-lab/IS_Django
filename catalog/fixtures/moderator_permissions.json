@@ -1,0 +1,20 @@
+[
+{
+  "model": "auth.permission",
+  "pk": 31,
+  "fields": {
+    "name": "Can delete Продукт",
+    "content_type": 8,
+    "codename": "delete_product"
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 41,
+  "fields": {
+    "name": "Может отменять публикацию продукта",
+    "content_type": 8,
+    "codename": "can_unpublish_product"
+  }
+}
+]
