@@ -3,51 +3,78 @@
 {% block title %}{{ product.name }} — Skystore{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <!-- Кнопка возврата -->
-        <div class="col-12 mb-4">
-            <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary">
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Кнопка возврата -->
+            <a href="{% url 'catalog:home' %}" class="btn btn-outline-secondary mb-4">
                 ← Назад к каталогу
             </a>
-        </div>
 
-        <!-- Изображение продукта -->
-        <div class="col-md-6 mb-4 mb-md-0">
-            {% if product.image %}
-                <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
-            {% else %}
-                <img src="https://via.placeholder.com/600x400?text=Нет+изображения" class="img-fluid rounded shadow" alt="Нет изображения">
-            {% endif %}
-        </div>
+            <div class="card shadow-lg">
+                <div class="row g-0">
+                    <!-- Изображение продукта -->
+                    <div class="col-md-5">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="img-fluid rounded-start h-100 w-100" style="object-fit: cover;" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center h-100">
+                                <p class="text-muted fs-4">Изображение отсутствует</p>
+                            </div>
+                        {% endif %}
+                    </div>
 
-        <!-- Информация о продукте -->
-        <div class="col-md-6">
-            <h1 class="mb-3">{{ product.name }}</h1>
+                    <!-- Информация о продукте -->
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h1 class="card-title mb-3">{{ product.name }}</h1>
 
-            <div class="mb-4">
-                <h4 class="text-success">{{ product.price }} ₽</h4>
-                <p class="text-muted mb-1">
-                    Категория: <strong>{{ product.category.name }}</strong>
-                </p>
-                <p class="text-muted small">
-                    Добавлено: {{ product.created_at|date:"d.m.Y" }} •
-                    Обновлено: {{ product.updated_at|date:"d.m.Y" }}
-                </p>
-            </div>
+                            <div class="mb-4">
+                                <h3 class="text-success fw-bold">{{ product.price }} ₽</h3>
+                                <p class="text-muted mb-1">
+                                    Категория: <strong>{{ product.category.name }}</strong>
+                                </p>
+                                {% if product.owner %}
+                                    <p class="text-muted mb-1">
+                                        Владелец: <strong>{{ product.owner.get_full_name|default:product.owner.email }}</strong>
+                                    </p>
+                                {% endif %}
+                                <p class="text-muted mb-1">
+                                    Статус:
+                                    {% if product.is_published %}
+                                        <span class="badge bg-success">Опубликовано</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">На модерации</span>
+                                    {% endif %}
+                                </p>
+                                <p class="text-muted small">
+                                    Создано: {{ product.created_at|date:"d.m.Y в H:i" }} •
+                                    Обновлено: {{ product.updated_at|date:"d.m.Y в H:i" }}
+                                </p>
+                            </div>
 
-            <!-- Описание -->
-            <h5>Описание:</h5>
-            <p class="lead">{{ product.description|linebreaks }}</p>
+                            <!-- Описание -->
+                            <h5 class="mb-3">Описание</h5>
+                            <p class="lead">{{ product.description|linebreaks }}</p>
 
-            <!-- Кнопки действий -->
-            <div class="mt-4">
-                <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-warning me-2">
-                    Редактировать
-                </a>
-                <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
-                    Удалить
-                </a>
+                            <!-- Кнопки действий (только для владельца или модератора) -->
+                            {% if user.is_authenticated and user == product.owner or user.has_perm('catalog.change_product') or user.has_perm('catalog.delete_product') %}
+                                <div class="mt-4">
+                                    {% if user == product.owner or user.has_perm('catalog.change_product') %}
+                                        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-warning me-2">
+                                            Редактировать
+                                        </a>
+                                    {% endif %}
+                                    {% if user == product.owner or user.has_perm('catalog.delete_product') %}
+                                        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">
+                                            Удалить
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

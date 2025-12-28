@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -54,7 +55,7 @@ class BlogDetailView(DetailView):
         return obj
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, UserPassesTestMixin,CreateView):
     """Создаёт новую блоговую запись."""
 
     model = BlogPost
@@ -62,12 +63,15 @@ class BlogCreateView(CreateView):
     fields = ["title", "content", "preview", "is_published"]
     success_url = reverse_lazy("blog:list")
 
+    def test_func(self):
+        return self.request.user.groups.filter(name="Контент-менеджер").exists()
+
     def form_valid(self, form):
         messages.success(self.request, "Статья успешно создана!")
         return super().form_valid(form)
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """Редактирует существующую блоговую запись."""
 
     model = BlogPost
@@ -75,18 +79,24 @@ class BlogUpdateView(UpdateView):
     fields = ["title", "content", "preview", "is_published"]
     success_url = reverse_lazy("blog:list")  # будет переопределено ниже
 
+    def test_func(self):
+        return self.request.user.groups.filter(name="Контент-менеджер").exists()
+
     def get_success_url(self):
         """После успешного обновления перенаправляет на страницу просмотра статьи."""
         messages.success(self.request, "Статья успешно обновлена!")
         return reverse_lazy("blog:detail", kwargs={"pk": self.object.pk})
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Удаляет блоговую запись."""
 
     model = BlogPost
     template_name = "blog/delete.html"
     success_url = reverse_lazy("blog:list")
+
+    def test_func(self):
+        return self.request.user.groups.filter(name="Контент-менеджер").exists()
 
     def form_valid(self, form):
         messages.success(self.request, "Статья удалена.")

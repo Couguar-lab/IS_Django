@@ -3,16 +3,16 @@
   "model": "catalog.category",
   "pk": 1,
   "fields": {
-    "name": "Рассылки",
-    "description": "Сервисы рассылок"
+    "name": "Р Р°СЃСЃС‹Р»РєРё",
+    "description": "РЎРµСЂРІРёСЃС‹ СЂР°СЃСЃС‹Р»РѕРє"
   }
 },
 {
   "model": "catalog.category",
   "pk": 2,
   "fields": {
-    "name": "Боты",
-    "description": "Телеграм-боты"
+    "name": "Р‘РѕС‚С‹",
+    "description": "РўРµР»РµРіСЂР°Рј-Р±РѕС‚С‹"
   }
 }
 ]
