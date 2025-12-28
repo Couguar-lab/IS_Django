@@ -1,10 +1,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'catalog:home' %}">Skystore</a>
+        <!-- Логотип и название сайта -->
+        <a class="navbar-brand fw-bold" href="{% url 'catalog:home' %}">Skystore</a>
+
+        <!-- Кнопка для мобильных устройств -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+        <!-- Основное меню -->
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -17,30 +22,42 @@
                     <a class="nav-link" href="{% url 'catalog:contacts' %}">Контакты</a>
                 </li>
             </ul>
-            <ul class="navbar-nav ms-auto">
+
+            <!-- Правая часть меню (авторизация и действия) -->
+            <ul class="navbar-nav">
                 {% if user.is_authenticated %}
+                    <!-- Админка только для staff -->
                     {% if user.is_staff %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">Админка</a>
                         </li>
                     {% endif %}
+
+                    <!-- Профиль -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:profile' %}">Профиль ({{ user.email }})</a>
+                        <a class="nav-link" href="{% url 'users:profile' %}">
+                            Профиль ({{ user.email }})
+                        </a>
                     </li>
+
+                    <!-- Добавление товара (для авторизованных) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'users:logout' %}">Выход</a>
+                        <a class="nav-link" href="{% url 'catalog:add_product' %}">
+                            Добавить товар
+                        </a>
+                    </li>
+
+                    <!-- Выход -->
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'users:logout' %}">Выход</a>
                     </li>
                 {% else %}
+                    <!-- Вход и регистрация для гостей -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:login' %}">Вход</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'users:register' %}">Регистрация</a>
-                    </li>
-                {% endif %}
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'catalog:add_product' %}">Добавить товар</a>
                     </li>
                 {% endif %}
             </ul>

@@ -12,7 +12,9 @@ from django.views.generic import (
 
 from .forms import ProductForm
 from .models import Contacts, Product
-
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from .services import get_products_by_category
 
 class HomeView(ListView):
     """Отображает главную страницу с пагинированным списком продуктов."""
@@ -24,9 +26,9 @@ class HomeView(ListView):
     ordering = ["-created_at"]
 
 
+@method_decorator(cache_page(60 * 5), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
-    """Отображает детальную информацию о конкретном продукте."""
-
+    """Отображает детальную информацию о продукте с кешированием страницы."""
     model = Product
     template_name = "catalog/product_detail.html"
     context_object_name = "product"
@@ -100,3 +102,18 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Показывает сообщение об успешном удалении продукта."""
         messages.success(self.request, "Товар успешно удалён.")
         return super().form_valid(form)
+
+class ProductsByCategoryView(ListView):
+    """Отображает список продуктов в выбранной категории."""
+    template_name = "catalog/products_by_category.html"
+    context_object_name = "products"
+    paginate_by = 6
+
+    def get_queryset(self):
+        category_id = self.kwargs["category_id"]
+        return get_products_by_category(category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category"] = Category.objects.get(pk=self.kwargs["category_id"])
+        return context
