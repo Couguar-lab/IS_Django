@@ -154,3 +154,23 @@ EMAIL_BACKEND = (
 # EMAIL_HOST_PASSWORD = "app_password"
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+# Кеширование
+CACHE_ENABLED = True  # можно переключать для тестов
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
